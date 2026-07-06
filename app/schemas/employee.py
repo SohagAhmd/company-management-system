@@ -17,7 +17,7 @@ class Update_model(BaseModel):
     first_name: str
     last_name: str
     email: str
-    phone: strfirst_name: str
+    phone: str
     last_name: str
     email: str
     phone: str
