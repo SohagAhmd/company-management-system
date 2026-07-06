@@ -1,6 +1,14 @@
-def main():
-    print("Hello from company-management-system!")
+from fastapi import FastAPI
+from app.database.db import engine, Base
+from app.models.employee import Employee
+from app.models.department import Department
+from app.models.project import Project
 
+app = FastAPI()
 
-if __name__ == "__main__":
-    main()
+#assigning all model in bd 
+Base.metadata.create_all(bind=engine)
+
+@app.get("/")
+def root():
+    return "Server is running..."

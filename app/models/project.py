@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Integer, String, Text, DateTime
 from sqlalchemy.sql import func
-from database.db import Base  
+from app.database.db import Base  
 
-class Task(Base):
-    __tablename__ = "tasks"
+class Project(Base):
+    __tablename__ = "project"
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(100), nullable=False)

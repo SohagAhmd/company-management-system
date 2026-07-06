@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Integer, String, Float, DateTime 
 from sqlalchemy.sql import func
-from Database.db import Base
+from app.database.db import Base
 
-class Depertment(Base):
-    __tablename__ = "depertment"
+class Department(Base):
+    __tablename__ = "department"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(100), nullable=False)

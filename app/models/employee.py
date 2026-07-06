@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Integer, String, Float, Date, DateTime, ForeignKey
 from sqlalchemy.sql import func
-from Database.db import Base 
+from app.database.db import Base
 
 class Employee(Base):
-    __tablename__ = "employees"
+    __tablename__ = "employee"
 
     id = Column(Integer, primary_key=True, index=True)
     first_name = Column(String(50), nullable=False)
