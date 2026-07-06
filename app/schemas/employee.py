@@ -30,7 +30,7 @@ class Update_model(BaseModel):
 
 
 #Employee Fetch response model
-class get_model(BaseModel):
+class Get_model(BaseModel):
     id: int
     first_name: str
     last_name: str
