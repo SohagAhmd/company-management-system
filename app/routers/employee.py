@@ -19,6 +19,13 @@ def create_employee(payload: Create_model, db: Session = Depends(get_db)):
 
 # Employee fetch API
 @router.get("", response_model=List[Get_model])
-def get_emp(db: Session = Depends(get_db)):
+def get_employee(db: Session = Depends(get_db)):
     emp_list = emp_crud.get_emp_from_db(db=db)
     return emp_list
+
+
+#Get employee by id
+@router.get("{id}", response_model=Get_model)
+def get_emp(id:int, db:Session=Depends(get_db)):
+    db_employee = emp_crud.get_emp_by_ID_from_db(db=db, id=id)
+    return db_employee
