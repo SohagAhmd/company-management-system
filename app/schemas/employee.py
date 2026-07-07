@@ -18,16 +18,10 @@ class Update_model(BaseModel):
     last_name: str
     email: str
     phone: str
-    last_name: str
-    email: str
     phone: str
     salary: float
     job_title: str
     hire_date: date
-    salary: float
-    job_title: str
-    hire_date: date
-
 
 #Employee Fetch response model
 class Get_model(BaseModel):
