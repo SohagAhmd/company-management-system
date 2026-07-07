@@ -1,7 +1,9 @@
-from pydantic import BaseModel
-from datetime import datetime, date
+from datetime import date, datetime
 
-#Employee create request model
+from pydantic import BaseModel
+
+
+# Employee create request model
 class Create_model(BaseModel):
     first_name: str
     last_name: str
@@ -12,7 +14,7 @@ class Create_model(BaseModel):
     hire_date: date
 
 
-#Employee update request model
+# Employee update request model
 class Update_model(BaseModel):
     first_name: str
     last_name: str
@@ -23,7 +25,8 @@ class Update_model(BaseModel):
     job_title: str
     hire_date: date
 
-#Employee Fetch response model
+
+# Employee Fetch response model
 class Get_model(BaseModel):
     id: int
     first_name: str
