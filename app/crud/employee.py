@@ -63,3 +63,16 @@ def update_employ(id:int, db:Session, updated_data:Update_model):
     db.commit()
     db.refresh(data_from_db)
     return data_from_db
+
+
+#Delete employ from db
+def delete_employee(id:int, db:Employee):
+    employee = db.query(Employee).filter(Employee.id == id).first() 
+    if employee is None:
+        raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, 
+                detail=f"Employee with id {id} not found"
+            )
+
+    db.delete(employee)
+    db.commit()
