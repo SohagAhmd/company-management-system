@@ -1,5 +1,5 @@
 from fastapi import HTTPException, status
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 
 from app.models.employee import Employee
 from app.schemas.employee import Create_model, Update_model
@@ -15,6 +15,7 @@ def create_emp_in_db(db: Session, payload: Create_model):
         salary=payload.salary,
         job_title=payload.job_title,
         hire_date=payload.hire_date,
+        department_id=payload.department_id,
     )
     db.add(new_emp)
     db.flush()
@@ -25,8 +26,10 @@ def create_emp_in_db(db: Session, payload: Create_model):
 
 # Get all employee CRUD
 def get_emp_from_db(db: Session):
-    employee_list = db.query(Employee).all()
-    return employee_list
+    db_employee_list = (
+        db.query(Employee).options(selectinload(Employee.department)).all()
+    )
+    return db_employee_list
 
 
 # Get employee by ID
@@ -59,6 +62,7 @@ def update_employ(db: Session, emp_id: int, payload: Update_model):
     data_from_db.salary = payload.salary
     data_from_db.job_title = payload.job_title
     data_from_db.hire_date = payload.hire_date
+    data_from_db.department_id = payload.department_id
 
     db.add(data_from_db)
     db.commit()

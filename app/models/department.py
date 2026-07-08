@@ -1,6 +1,6 @@
 from sqlalchemy import Column, DateTime, Integer, String
 from sqlalchemy.sql import func
-
+from sqlalchemy.orm import relationship
 from app.database.db import Base
 
 
@@ -13,3 +13,6 @@ class Department(Base):
     updated_at = Column(
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )
+
+    # Relationship fields
+    employees = relationship("Employee", back_populates="department")
