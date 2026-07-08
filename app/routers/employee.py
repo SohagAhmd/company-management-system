@@ -1,5 +1,4 @@
 from typing import List
-
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
@@ -11,9 +10,9 @@ router = APIRouter(prefix="/api/v1/employees", tags=["Employee"])
 
 
 # Employee add API
-@router.post("/", status_code=status.HTTP_201_CREATED)
+@router.post("/", response_model=Get_model, status_code=status.HTTP_201_CREATED)
 def create_employee(payload: Create_model, db: Session = Depends(get_db)):
-    new_emp = emp_crud.create_emp_in_db(db=db, emp_data=payload)
+    new_emp = emp_crud.create_emp_in_db(db=db, payload=payload)
     return new_emp
 
 
@@ -24,22 +23,22 @@ def get_employee(db: Session = Depends(get_db)):
     return emp_list
 
 
-# Get employee by id
+# Get employee by ID
 @router.get("/{id}", response_model=Get_model)
 def get_emp(id: int, db: Session = Depends(get_db)):
-    db_employee = emp_crud.get_emp_by_ID_from_db(db=db, id=id)
+    db_employee = emp_crud.get_emp_by_ID_from_db(db=db, emp_id=id)
     return db_employee
 
 
-# update data
-@router.put("/{id}", response_model=Update_model)
+# Update Employee data
+@router.put("/{id}", response_model=Get_model)
 def update_employee(id: int, payload: Update_model, db: Session = Depends(get_db)):
-    updaed_data = emp_crud.update_employ(db=db, id=id, updated_data=payload)
-    return updaed_data
+    updated_data = emp_crud.update_employ(db=db, emp_id=id, payload=payload)
+    return updated_data
 
 
-# Delete employee
+# Delete Employee
 @router.delete("/{id}", status_code=status.HTTP_200_OK)
 def delete_employee(id: int, db: Session = Depends(get_db)):
-    emp_crud.delete_employee(db=db, id=id)
-    return {"message": f"Employee with ID {id} is successfully        deleted!"}
+    emp_crud.delete_employee(db=db, emp_id=id)
+    return {"message": f"Employee with ID {id} is successfully deleted!"}
