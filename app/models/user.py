@@ -12,9 +12,7 @@ class User(Base):
     email = Column(String, unique=True, nullable=False)
     hashed_pass = Column(String, nullable=False)
     created_at = Column(DateTime, default=func.now())
-<<<<<<< Updated upstream
-    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
-=======
+
     updated_at = Column(
         DateTime,
         default=func.now(),
@@ -26,4 +24,3 @@ class User(Base):
         back_populates="user",
         cascade="all, delete-orphan",
     )
->>>>>>> Stashed changes
