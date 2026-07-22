@@ -1,6 +1,6 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session, selectinload
-
+from sqlalchemy import func
 from app.models.employee import Employee
 from app.schemas.employee import Create_model, Update_model
 
@@ -25,11 +25,26 @@ def create_emp_in_db(db: Session, payload: Create_model):
 
 
 # Get all employee CRUD
-def get_emp_from_db(db: Session):
+def get_emp_from_db(page: int, size: int, db: Session):
+    offset = (page - 1) * size
+
     db_employee_list = (
-        db.query(Employee).options(selectinload(Employee.department)).all()
+        db.query(Employee)
+        .options(selectinload(Employee.department))
+        .offset(offset)
+        .limit(size)
+        .all()
     )
-    return db_employee_list
+
+    total_data = (
+        db.query(func.count(Employee.id))
+        .scalar()
+    )
+
+    return {
+        "total": total_data,
+        "items": db_employee_list
+    }
 
 
 # Get employee by ID

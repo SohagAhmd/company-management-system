@@ -1,12 +1,12 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, Query
 from sqlalchemy.orm import Session
 
 from app.crud import employee as emp_crud
 from app.database.db import get_db
 from app.models.user import User
-from app.schemas.employee import Create_model, Get_model, Update_model
+from app.schemas.employee import Create_model, Get_model, Update_model, EmployeePaginationResponse
 from app.core.security.permissions import require_roles
 
 
@@ -37,14 +37,15 @@ def create_employee(
 # Get All Employees
 # Access: Admin, HR, User
 @router.get(
-    "/",
-    response_model=List[Get_model],
+    "/",response_model=List[EmployeePaginationResponse],
 )
 def get_employee(
+    page: int = Query(1, ge=1),
+    size: int = Query(10, ge=1, le=100),
     current_user: User = Depends(require_roles(["admin", "hr", "user"])),
     db: Session = Depends(get_db),
 ):
-    return emp_crud.get_emp_from_db(db=db)
+    return emp_crud.get_emp_from_db(page=page, size=size, db=db)
 
 
 # Get Employee By ID

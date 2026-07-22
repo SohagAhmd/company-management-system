@@ -1,13 +1,8 @@
 from fastapi import FastAPI
-from app.database.db import engine, Base
 
 # Import SQLAlchemy ORM models to register them with Base before creating tables
-from app.models.employee import Employee
-from app.models.department import Department
-from app.models.user import User
-
 # Import API routers to include their endpoints in the main app
-from app.routers import employee, department, user
+from app.routers import department, employee, user
 
 # Initialize the FastAPI application with custom metadata for documentation
 app = FastAPI(title="Company Management System API", version="1.0.0")
@@ -17,9 +12,6 @@ app.include_router(employee.router)
 app.include_router(department.router)
 app.include_router(user.router)
 # app.include_router(project.router)
-
-# Automatically create all registered database tables inside the SQLite file
-Base.metadata.create_all(bind=engine)
 
 
 # Root endpoint to quickly verify that the server is alive and responding

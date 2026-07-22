@@ -1,4 +1,5 @@
 from datetime import date, datetime
+from typing import List
 
 from pydantic import BaseModel, ConfigDict
 
@@ -21,7 +22,6 @@ class Update_model(BaseModel):
     first_name: str
     last_name: str
     email: str
-    phone: str
     phone: str
     salary: float
     job_title: str
@@ -51,3 +51,9 @@ class Get_model(BaseModel):
     department: DepartmentMinResponse
 
     model_config = ConfigDict(from_attributes=True)
+
+
+# Employee Pagination Response
+class EmployeePaginationResponse(BaseModel):
+    total: int
+    items: List[Get_model]
