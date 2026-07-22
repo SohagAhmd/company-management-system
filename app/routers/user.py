@@ -4,9 +4,19 @@ from sqlalchemy.orm import Session
 from app.database.db import get_db
 from app.schemas.user import UserCreate, UserLogin, RefreshTokenRequest
 from app.crud import user as user_crud
-
+from app.core.security.permissions import require_roles
+from app.models.user import User
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
+
+
+@router.get("/admin")
+def admin_dashboard(
+    current_user: User = Depends(require_roles(["admin"])),
+):
+    return {
+        "message": "Welcome Admin",
+    }
 
 
 @router.post("/sign-up", status_code=status.HTTP_201_CREATED)

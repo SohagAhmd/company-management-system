@@ -3,11 +3,12 @@ from typing import List
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
-from app.core.security.jwt import get_current_user
 from app.crud import employee as emp_crud
 from app.database.db import get_db
 from app.models.user import User
 from app.schemas.employee import Create_model, Get_model, Update_model
+from app.core.security.permissions import require_roles
+
 
 router = APIRouter(
     prefix="/api/v1/employees",
@@ -15,42 +16,65 @@ router = APIRouter(
 )
 
 
-# Employee add API
-@router.post("/", response_model=Get_model, status_code=status.HTTP_201_CREATED)
+# Create Employee
+# Access: Admin, HR
+@router.post(
+    "/",
+    response_model=Get_model,
+    status_code=status.HTTP_201_CREATED,
+)
 def create_employee(
     payload: Create_model,
+    current_user: User = Depends(require_roles(["admin", "hr"])),
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
 ):
-    return emp_crud.create_emp_in_db(db=db, payload=payload)
+    return emp_crud.create_emp_in_db(
+        db=db,
+        payload=payload,
+    )
 
 
-# Employee fetch API
-@router.get("/", response_model=List[Get_model])
+# Get All Employees
+# Access: Admin, HR, User
+@router.get(
+    "/",
+    response_model=List[Get_model],
+)
 def get_employee(
+    current_user: User = Depends(require_roles(["admin", "hr", "user"])),
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
 ):
     return emp_crud.get_emp_from_db(db=db)
 
 
-# Get employee by ID
-@router.get("/{id}", response_model=Get_model)
+# Get Employee By ID
+# Access: Admin, HR, User
+@router.get(
+    "/{id}",
+    response_model=Get_model,
+)
 def get_emp(
     id: int,
+    current_user: User = Depends(require_roles(["admin", "hr", "user"])),
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
 ):
-    return emp_crud.get_emp_by_ID_from_db(db=db, emp_id=id)
+    return emp_crud.get_emp_by_ID_from_db(
+        db=db,
+        emp_id=id,
+    )
 
 
-# Update Employee data
-@router.put("/{id}", response_model=Get_model)
+# Update Employee
+# Access: Admin, HR
+@router.put(
+    "/{id}",
+    response_model=Get_model,
+)
 def update_employee(
     id: int,
     payload: Update_model,
+    current_user: User = Depends(require_roles(["admin", "hr"])),
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
 ):
     return emp_crud.update_employ(
         db=db,
@@ -60,12 +84,19 @@ def update_employee(
 
 
 # Delete Employee
-@router.delete("/{id}", status_code=status.HTTP_200_OK)
+# Access: Admin Only
+@router.delete(
+    "/{id}",
+    status_code=status.HTTP_200_OK,
+)
 def delete_employee(
     id: int,
+    current_user: User = Depends(require_roles(["admin"])),
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
 ):
-    emp_crud.delete_employee(db=db, emp_id=id)
+    emp_crud.delete_employee(
+        db=db,
+        emp_id=id,
+    )
 
     return {"message": f"Employee with ID {id} is successfully deleted!"}
