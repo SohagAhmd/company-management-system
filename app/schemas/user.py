@@ -16,11 +16,7 @@ class Response_model(BaseModel):
     id: int
     name: str
     email: str
-
-
-class LoginResponse(BaseModel):
-    message: str
-    user_details: Response_model
+    role: str
 
     class Config:
         from_attributes = True
